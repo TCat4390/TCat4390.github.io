@@ -140,7 +140,7 @@ Material updates will be announced within the App.
 11. Contact
 
 Bridge Developer Team
-📧 privacy@bridge.app
+📧 nex.anointer850@passinbox.com
 
 ⸻
 

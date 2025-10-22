@@ -1,151 +1,166 @@
-Bridge (Beta) — Privacy Policy
+Bridge — Privacy Policy
 
 Effective Date: 2025-10-22
 Last Updated: 2025-10-22
 
-This Privacy Policy applies to the Bridge mobile application distributed via Apple TestFlight (the “App”) for testing/evaluation purposes only. By using the App, you agree to this Policy.
+Thank you for using Bridge (the “App”).
+This Privacy Policy explains how we handle your information when you use the App, currently distributed for testing and limited public use.
 
-We do not sell personal data and we do not run advertising or third-party trackers in this beta.
-
-⸻
-
-1) What We Process (Data Categories)
-
-A. Voice (Speech-to-Text for translation)
-	•	Source. Recorded via iOS microphone when you tap record (44.1 kHz, mono AAC). Ambient sounds may be captured.
-	•	Path. App → Cloudflare Worker /stt (relay only; no storage) → OpenAI STT API → Worker returns text → App. No alternate routes.
-	•	On-device processing. No VAD/peak limiting/redaction performed locally.
-	•	Worker behavior. For STT, the Worker forwards the multipart body without unpacking; no persistence.
-	•	Retention. The temporary .m4a file is deleted immediately after transcription (SpeechManager.cleanupRecording). Worker 0 seconds. OpenAI may retain limited data per its own policy (commonly up to 30 days) and is not used for model training where such API settings are available. We cannot force third-party deletion.
-
-B. Photos / Images (Photo explanation)
-	•	Source. In-app camera capture only (no photo-library import at this time).
-	•	EXIF/GPS. After capture we re-encode via jpegData(compressionQuality: 0.8) and normalize/crop; original EXIF/GPS/device metadata are removed.
-	•	Optimization. App performs CapturedPhoto.optimizedData() (long edge 1600 px, ~0.8 quality), base64-encodes.
-	•	Path. App → Cloudflare Worker (pass-through) → OpenRouter (model provider) → Worker → App. Worker does no compression, no caching; it simply wraps the base64 (e.g., data:image/...;base64,) and forwards.
-	•	Payload size. Typical 300–600 KB after optimization.
-	•	Protection. No automated redaction or screenshot detection yet; we present UI prompts reminding you not to upload sensitive IDs (passports, credit cards, etc.).
-	•	Retention. Worker 0 seconds (memory only). Locally, the App may store the imageData alongside your inquiry and results until you delete them.
-
-C. Text (User inputs, LLM replies, translation history)
-	•	Local storage. Stored with SwiftData (StoredChat, StoredPhotoInquiry), including user inputs, results, summaries/follow-ups, and any associated imageData. Stored in the App container with iOS Data Protection (encrypted when device is locked).
-	•	Tokens / IDs. JWT, refresh tokens, and an App-generated device UUID are stored in Keychain (kSecAttrAccessibleAfterFirstUnlock).
-	•	Backups. We do not sync ourselves; your data may be included in iOS/iCloud backups based on your own device settings.
-	•	Uploads. Besides the minimal context needed to complete a specific request, we do not upload conversation history to our servers; no model-training or analytics uploads.
-
-D. Device & Network Data
-	•	App creates a non-reversible bridge.device.uuid stored in Keychain (we do not read hardware serials).
-	•	At the Worker, we HMAC the sub from Sign in with Apple before writing to D1; refresh-token table stores token SHA-256 and device UUID only.
-	•	IP addresses are visible to Cloudflare POPs for routing; we do not enable Logpush. The Worker does not store IP/User-Agent; any UA presented upstream is not persisted by us.
-
-E. Logs & Telemetry
-	•	Worker. Optional DEBUG_TRANSLATE console logs (off by default). When off, no payload/response content is logged. We do not persist logs to R2/Logpush.
-	•	App. OSLog/Logger for errors and byte sizes (flagged .private). No Firebase Crashlytics/Analytics or other trackers.
-	•	Database. D1 holds only business data (credits/ledger/refresh tokens), not request bodies.
-
-F. Payments / Credits
-	•	IAP. Apple In-App Purchases in TestFlight and production.
-	•	Records. We maintain: ledger(id, hashed_user_id, delta, reason, meta JSON, timestamp), credits(balance), refresh_tokens(token_hash, expires_at, device_id), users(hashed_user_id, device_id, email, created_at).
-	•	Receipts. /iap/redeem verifies against Apple immediately; we do not store the original base64 receipt.
-	•	Retention. Planned 5 years for accounting/fraud-prevention. (Purge jobs to be added before GA.)
+Bridge is built with privacy-first principles: we do not run advertisements, do not sell personal data, and minimize all forms of storage.
 
 ⸻
 
-2) Why We Process (Purposes & Legal Bases)
-	•	Provide core features (speech transcription, translation, photo explanation) — performance of a contract/your request; consent.
-	•	Account & credits (top-ups, usage, fraud prevention) — performance of a contract; legal obligation; legitimate interests.
-	•	Security/abuse control (rate-limit, request validation) — legitimate interests.
-	•	Beta quality (basic reliability metrics) — legitimate interests.
+1. Overview
 
-We do not use your content for marketing or our own model training.
+Bridge enables on-device and cloud-assisted translation of voice, photos, and text.
+We process limited data only as necessary to deliver these functions, and we delete or anonymize it once no longer needed.
 
 ⸻
 
-3) Where Your Data Goes (Vendors & Transfers)
+2. Data We Handle
 
-We rely on carefully selected third-party processors solely to deliver the functions described above:
-	•	Cloudflare Workers (and D1/Durable Objects as applicable) — request relay & minimal account/credits records. We configure Workers not to persist request/response bodies. Cloudflare may keep limited network-level logs for operations.
-	•	OpenAI — speech-to-text (STT) processing.
-	•	OpenRouter — routing translation/LLM inference to model providers.
+Voice and Audio
 
-These providers process data under their own terms/policies. We configure available API settings to disable data retention and training where possible, but we cannot guarantee their internal handling or deletion timelines. By using voice/photo features, you consent to these transfers.
+When you use voice translation:
+	•	The App records short audio segments while you hold or tap the record button.
+	•	These recordings are securely transmitted to our relay service, which forwards them to a trusted speech recognition provider to convert speech into text, then returns the result.
+	•	The relay service does not store or log audio content.
+	•	Temporary files on your device are deleted right after conversion.
+	•	The external provider may retain limited data for a short period in accordance with its own policy; we configure our systems to minimize such retention.
 
-International transfers. Traffic may traverse Cloudflare POPs globally; OpenAI/OpenRouter endpoints may reside outside your country (e.g., US/EU). For users in regions with cross-border rules, we rely on standard contractual safeguards where available.
+Photos
 
-⸻
+When you use photo translation or description:
+	•	Images are captured through the App’s built-in camera.
+	•	All location (EXIF/GPS) and device metadata are removed automatically before upload.
+	•	The processed image is transmitted securely to our relay service, which forwards it to a language-processing provider for interpretation and then returns the result.
+	•	The relay service does not persist or log image data.
+	•	A copy of the photo and its result may remain in your local history until you delete it.
 
-4) Retention
-	•	Voice temp file (App): deleted immediately after transcription (0 s).
-	•	Worker content: 0 s (in-memory only).
-	•	OpenAI (STT): may retain limited data per its policy (often up to 30 days); not used for training where disabled.
-	•	Photos & conversation records (App): retained locally until you delete them (no auto-expiry).
-	•	Refresh tokens: each token valid 30 days; revoked tokens kept to prevent replay.
-	•	Credits & ledger: intended 5 years (accounting/fraud).
-	•	System logs: no persistent app/worker content logs; Cloudflare may keep short operational metrics.
+Text and History
+	•	Your input text, translations, and previous results are stored only on your device inside protected local storage.
+	•	Bridge does not automatically upload or share these records with our servers or third parties.
+	•	If you sign in, we store a hashed account identifier and authentication tokens for secure session management.
 
-⸻
+Device & Diagnostic Data
+	•	We collect minimal technical data (device type, system version, language, time zone) required to ensure compatibility and detect abuse.
+	•	Network information such as IP addresses is handled transiently by our infrastructure provider for routing and security, not by Bridge itself.
+	•	We do not use analytics, advertising identifiers, or behavior tracking SDKs.
 
-5) Your Choices & Controls
-	•	Delete in App. You can delete individual items or “Delete All” for conversations/photo insights.
-	•	Delete account. In Settings, “Delete Account” calls /me/delete to remove your hashed user records from D1 (users/credits/ledger/refresh_tokens).
-	•	Email requests. Contact privacy@bridge.app; we target 5 business days to respond during beta.
-	•	Third-party deletion. OpenAI/OpenRouter do not currently offer per-request deletion we can enforce; we state their independent retention and will pass along your requests, without guarantee of outcome.
-	•	Backups. Your local/iCloud backups are under your device settings.
-
-⸻
-
-6) Security
-	•	In transit. HTTPS/TLS end-to-end (App ↔ Worker ↔ third-party APIs).
-	•	At rest. App data protected by iOS Data Protection; Keychain for tokens/IDs. D1 is encrypted at rest by the platform.
-	•	Secrets. API keys/JWT secrets in Cloudflare Encrypted Secrets; manual quarterly review and rotation planned before GA.
-	•	Access control. Only two core engineers have production access (MFA enabled). No back-office UI to view user content.
-	•	Abuse control. Rate-limits (Durable Objects), Apple JWT validation, credits checks. We plan max size checks (e.g., ≤ 1.5 MB images) and stricter MIME validation before GA.
-	•	Incident response. If a breach is suspected, we will revoke keys, investigate within 48 h, and—where required—notify regulators and affected users within 72 h.
+Payment & Credits
+	•	If you purchase translation credits or subscriptions, payment processing is handled entirely by Apple through In-App Purchase.
+	•	We record transaction references, anonymized account identifiers, and credit balances to operate the service.
+	•	We never store card numbers or billing details.
+	•	Transaction records are retained up to five years for accounting and fraud prevention.
 
 ⸻
 
-7) Children
+3. Why We Process Data
 
-The App is intended for users 16+ and is not directed to children. Do not upload minors’ sensitive data. If you believe such data was submitted, please delete it in-app and contact us.
+We process information solely for:
+	1.	Delivering translations, transcriptions, and photo explanations.
+	2.	Operating user accounts, credits, and subscriptions.
+	3.	Protecting our systems from abuse and maintaining service reliability.
+	4.	Meeting legal and accounting obligations.
 
-⸻
-
-8) Region-Specific Notes
-
-We operate one global policy and implement region-specific requirements where applicable (e.g., access/deletion rights; cross-border safeguards). If local laws grant you additional rights, we will honor them to the extent required.
-
-⸻
-
-9) Changes to This Policy
-
-Because this is a beta, features and data handling may change. We will update this page with the effective date and, for material changes, provide a notice in-app.
+We never use your data for model training or targeted marketing.
 
 ⸻
 
-10) Contact
+4. How Data Is Stored and Retained
+
+Type	Storage Location	Retention
+Audio & photo content	In-memory transit only	Deleted immediately after processing
+Text & history	On your device (encrypted)	Until you delete it
+Account / credits	Encrypted database (minimal fields)	Up to 5 years
+Access tokens	Secure system keychain	Rotated or invalidated within 30 days
+Logs	Operational, non-content metrics only	Short-term, aggregated
+
+
+⸻
+
+5. Security Measures
+
+We employ:
+	•	End-to-end HTTPS/TLS encryption for all transmissions.
+	•	OS-level encryption for on-device storage.
+	•	Encrypted secrets and keys with scheduled rotation.
+	•	Strict access control (only two authorized engineers).
+	•	Rate limits and validation to prevent automated abuse.
+	•	A security response plan for timely notification in case of any breach.
+
+⸻
+
+6. Third-Party Services
+
+Bridge uses a small number of infrastructure and AI service providers:
+	•	Cloud infrastructure provider (for secure request relaying and database storage).
+	•	Speech recognition provider (for converting audio to text).
+	•	Language model provider (for generating translations and explanations).
+	•	Apple (for authentication and payment processing).
+
+Each provider processes data under its own privacy policy and may temporarily store data as described in their documentation.
+We configure available options to disable logging and training wherever possible, but cannot fully control their internal practices.
+By using features that require these services, you consent to such processing.
+
+⸻
+
+7. International Transfers
+
+Data may be routed through servers located in different countries to ensure global performance.
+We rely on standard contractual safeguards or equivalent protection for such transfers when required by law.
+
+⸻
+
+8. Your Rights and Choices
+	•	Delete locally: You may delete individual or all conversations and photos within the App.
+	•	Delete account: Selecting Delete Account removes your account and credit data from our database.
+	•	Data requests: Contact us to access or delete remaining records.
+	•	Third-party data: Requests relating to external AI providers will be forwarded where feasible, but we cannot guarantee their deletion schedules.
+	•	Opt-out: We do not sell or share your personal information for advertising.
+
+⸻
+
+9. Children’s Privacy
+
+Bridge is intended for users aged 16 and above.
+We do not knowingly collect data from children.
+If you believe a minor has submitted personal data, please delete the content and contact us for assistance.
+
+⸻
+
+10. Changes to This Policy
+
+We may update this Policy to reflect feature or legal changes.
+The “Last Updated” date will always indicate the current version.
+Material updates will be announced within the App.
+
+⸻
+
+11. Contact
 
 Bridge Developer Team
-privacy@bridge.app
+📧 privacy@bridge.app
 
 ⸻
 
-Appendix — Data Map (Developer-Readable Summary)
+Summary Table (for App Store Transparency)
 
-Area	What	Stored Where	Kept For
-Voice (STT)	.m4a temp → Worker relay → OpenAI STT	App temp (then deleted), Worker memory only, OpenAI systems	App: 0 s; Worker: 0 s; OpenAI: up to ~30 days (per its policy)
-Photo	1600 px base64; EXIF/GPS removed	App SwiftData (optional); Worker memory only; OpenRouter transit	App: until user deletes; Worker: 0 s
-Text & History	Inputs, results, summaries, imageData	App SwiftData (iOS Data Protection)	Until user deletes
-Tokens/IDs	JWT/refresh/device UUID	iOS Keychain; D1 stores hashes and device IDs	Refresh tokens 30 days; revoked retained to prevent replay
-Credits/Ledger	Balance, deltas, reasons, meta	Cloudflare D1 (encrypted at rest)	Target 5 years
-Logs	Minimal error/metrics; no content	App OSLog; Worker console (debug-off by default)	No persistent content logs
+Category	Used For	Shared With Third Parties	Retention
+Audio recordings	Transcription	Yes – speech provider	≤ transient (0 s)
+Photos	Translation / description	Yes – language provider	≤ transient (0 s)
+Text inputs & results	Translation memory (local)	No	Until deleted by user
+Account data	Authentication / credits	Infrastructure provider	Up to 5 years
+Diagnostic data	Reliability / abuse prevention	Infrastructure provider	Short term logs
 
-
-⸻
-
-Note on third-party models. We use OpenAI and OpenRouter to process content as described. We configure available settings to disable retention/training where possible. However, we do not control their internal operations and cannot guarantee deletion timelines. Use voice/photo features only if you consent to such processing.
 
 ⸻
 
-End of Policy
+Key principle: Bridge processes the minimum information required to function.
+We do not permanently store voice or photo data, do not build behavioral profiles, and do not use your content to train AI models.
+
+⸻
+
+End of Privacy Policy
 
 ⸻

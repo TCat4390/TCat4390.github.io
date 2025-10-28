@@ -3,16 +3,16 @@ Bridge AI — Privacy Policy
 Effective Date: 2025-10-22
 Last Updated: 2025-10-24 (rev B)
 
-Thank you for using Bridge (the “App”).
+Thank you for using Bridge AI (the “App”).
 This Privacy Policy explains how we handle your information when you use the App, currently distributed for testing and limited public use.
 
-Bridge is built with privacy-first principles: we do not run advertisements, do not sell personal data, and minimize all forms of storage.
+Bridge AI is built with privacy-first principles: we do not run advertisements, do not sell personal data, and minimize all forms of storage.
 
 ⸻
 
 1. Overview
 
-Bridge enables on-device and cloud-assisted translation of voice, photos, and text.
+Bridge AI enables on-device and cloud-assisted translation of voice, photos, and text.
 We process limited data only as necessary to deliver these functions, and we delete or anonymize it once no longer needed.
 
 ⸻
@@ -98,7 +98,7 @@ We employ:
 
 6. Third-Party Services
 
-Bridge uses a small number of infrastructure and AI service providers:
+Bridge AI uses a small number of infrastructure and AI service providers:
 	•	Cloud infrastructure provider – for secure request relaying, minimal database storage, and hashed-ID trial validation.
 	•	Speech recognition provider – for converting audio to text.
 	•	Language model provider (e.g., OpenRouter) – for processing text translation requests that may include previous conversation context.
@@ -130,7 +130,7 @@ We rely on standard contractual safeguards or equivalent protection for such tra
 
 9. Children’s Privacy
 
-Bridge is intended for users aged 12 and above.
+Bridge AI is intended for users aged 12 and above.
 We do not knowingly collect data from children.
 If you believe a minor has submitted personal data, please delete the content and contact us for assistance.
 
@@ -146,26 +146,22 @@ Material updates will be announced within the App.
 
 11. Contact
 
-Bridge Developer Team
+Bridge AI Developer Team
 📧 bridge.linked767@passinbox.com
 
 ⸻
 
-Summary Table (for App Store Transparency)
-
-Category	Used For	Shared With Third Parties	Retention
-Audio & photo uploads (server relay)	Speech and image processing via worker	Yes – speech / language provider	Transient (0 s after processing)
-Saved photos & insights (local)	Viewing previous translations	No	Until deleted by user
-Text inputs & prior messages	Translation via external AI model	Yes – language provider	Transient, deleted after response
-Local text history	Local reference	No	Until deleted by user
-Account & credits	Authentication / billing	Infrastructure provider	Up to 5 years
-Hashed user ID & trial flag	Prevent duplicate trial redemption	Infrastructure provider	Retained in anonymous form after deletion
-Diagnostic data	Reliability / abuse prevention	Infrastructure provider	Short-term, aggregated
-
-
+Summary (for App Store Transparency)
+	•	Audio & photo uploads: Used for speech and image processing through a worker. Shared with language providers. Deleted immediately after processing.
+	•	Saved photos & insights: Stored locally for viewing previous translations. Not shared. Kept until deleted by the user.
+	•	Text inputs & prior messages: Sent to external language providers for translation. Deleted right after the response.
+	•	Local text history: Stored locally for user reference. Not shared. Retained until deleted by the user.
+	•	Account & credits: Used for authentication and billing through infrastructure providers. Retained for up to five years.
+	•	Hashed user ID & trial flag: Used to prevent duplicate trial redemption. Retained in anonymous form after account deletion.
+	•	Diagnostic data: Used for reliability and abuse prevention. Shared with infrastructure providers and kept short-term in aggregated form.
 ⸻
 
-Key principle: Bridge processes the minimum information required to function.
+Key principle: Bridge AI processes the minimum information required to function.
 We do not permanently store voice or photo data on our servers, do not build behavioral profiles, and do not use your content to train AI models.
 
 ⸻

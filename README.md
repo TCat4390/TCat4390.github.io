@@ -1,4 +1,4 @@
-Bridge — Privacy Policy
+Bridge AI — Privacy Policy
 
 Effective Date: 2025-10-22
 Last Updated: 2025-10-24 (rev B)

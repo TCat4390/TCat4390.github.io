@@ -147,7 +147,7 @@ Material updates will be announced within the App.
 11. Contact
 
 Bridge Developer Team
-📧 nex.anointer850@passinbox.com
+📧 bridge.linked767@passinbox.com
 
 ⸻
 

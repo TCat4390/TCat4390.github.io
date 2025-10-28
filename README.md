@@ -130,7 +130,7 @@ We rely on standard contractual safeguards or equivalent protection for such tra
 
 9. Children’s Privacy
 
-Bridge is intended for users aged 16 and above.
+Bridge is intended for users aged 12 and above.
 We do not knowingly collect data from children.
 If you believe a minor has submitted personal data, please delete the content and contact us for assistance.
 
